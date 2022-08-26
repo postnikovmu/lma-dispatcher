@@ -1,0 +1,5 @@
+---
+applications:
+- name: go-vac-back-serv
+  env:
+    GOVERSION: go1.17   
