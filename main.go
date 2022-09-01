@@ -40,76 +40,66 @@ type RespData struct {
 	return pl
 }*/
 
-type Pair struct {
-	Key   string
-	Value int
-}
-
-type PairList []Pair
-
 /*
-func (p PairList) Len() int           { return len(p) }
-func (p PairList) Less(i, j int) bool { return p[i].Value < p[j].Value }
-func (p PairList) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }*/
+func handler(w http.ResponseWriter, r *http.Request) {
 
-/*func handler(w http.ResponseWriter, r *http.Request) {
+		//Create a variable of the same type as our model
+		var ltVacancies vacancies
 
-	//Create a variable of the same type as our model
-	var ltVacancies vacancies
+		lmSkills := make(map[string]int)
 
-	lmSkills := make(map[string]int)
-
-	var strText, strArea, itemsNum string
-	if r.Method == "POST" {
-		strText = r.FormValue("strText")
-		strArea = r.FormValue("strArea")
-		fmt.Println(strText, strArea)
-	}
-
-	if strText != "" && strArea != "" {
-		lvText := url.QueryEscape(strText)
-		lvArea := url.QueryEscape(strArea)
-		//Build The URL string
-		URL := "https://go-web-hh-vac.cfapps.us10.hana.ondemand.com/hh4?text=" + lvText + "&" + "area=" + lvArea
-		//We make HTTP request using the Get function
-		resp, err := http.Get(URL)
-		if err != nil {
-			log.Fatal("Sorry, an error occurred, please try again")
-		}
-		defer resp.Body.Close()
-
-		//Decode the data
-		if err := json.NewDecoder(resp.Body).Decode(&ltVacancies); err != nil {
-			log.Fatal("Sorry, an error occurred, please try again")
+		var strText, strArea, itemsNum string
+		if r.Method == "POST" {
+			strText = r.FormValue("strText")
+			strArea = r.FormValue("strArea")
+			fmt.Println(strText, strArea)
 		}
 
-		for _, line := range ltVacancies {
-			for _, lineSkill := range line.KeySkills {
-				lmSkills[lineSkill.Name] += 1
+		if strText != "" && strArea != "" {
+			lvText := url.QueryEscape(strText)
+			lvArea := url.QueryEscape(strArea)
+			//Build The URL string
+			URL := "https://go-web-hh-vac.cfapps.us10.hana.ondemand.com/hh4?text=" + lvText + "&" + "area=" + lvArea
+			//We make HTTP request using the Get function
+			resp, err := http.Get(URL)
+			if err != nil {
+				log.Fatal("Sorry, an error occurred, please try again")
 			}
+			defer resp.Body.Close()
+
+			//Decode the data
+			if err := json.NewDecoder(resp.Body).Decode(&ltVacancies); err != nil {
+				log.Fatal("Sorry, an error occurred, please try again")
+			}
+
+			for _, line := range ltVacancies {
+				for _, lineSkill := range line.KeySkills {
+					lmSkills[lineSkill.Name] += 1
+				}
+			}
+
+			itemsNum = strconv.Itoa(len(lmSkills)) + " skills are found"
 		}
 
-		itemsNum = strconv.Itoa(len(lmSkills)) + " skills are found"
-	}
+		lmSortedSkills := rankByWordCount(lmSkills)
 
-	lmSortedSkills := rankByWordCount(lmSkills)
+		respData := RespData{
+			Title:    "Skills analyzer",
+			Response: "Welcome to the skills analyzer",
+			List:     lmSortedSkills,
+			Text:     strText,
+			Area:     strArea,
+			ItemsNum: itemsNum,
+		}
 
-	respData := RespData{
-		Title:    "Skills analyzer",
-		Response: "Welcome to the skills analyzer",
-		List:     lmSortedSkills,
-		Text:     strText,
-		Area:     strArea,
-		ItemsNum: itemsNum,
+		t, err := template.ParseFiles("templates/index.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Header().Add("Content-Type", "text/html")
+		t.Execute(w, respData)
 	}
-
-	t, err := template.ParseFiles("templates/index.html")
-	if err != nil {
-		log.Fatal(err)
-	}
-	w.Header().Add("Content-Type", "text/html")
-	t.Execute(w, respData)
-}*/
+*/
 type Element struct {
 	w  *http.ResponseWriter
 	r  *http.Request
@@ -119,13 +109,15 @@ type Element struct {
 
 var queue *list.List
 
-/*func handler1(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.NotFound(w, r)
-		return
+/*
+	func handler1(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			http.NotFound(w, r)
+			return
+		}
+		fmt.Fprint(w, "Hello from backend service")
 	}
-	fmt.Fprint(w, "Hello from backend service")
-}*/
+*/
 func handler1(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/" {
@@ -150,7 +142,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	for {
 		select {
 		case <-e.c:
-			fmt.Fprint(*e.w, "You request is ", e.rd.Text)
+			fmt.Fprint(*e.w, "You request is ", e.rd.Text, e.rd.List)
 			//////// here should be the rendering data or
 			return
 		}
