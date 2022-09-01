@@ -134,9 +134,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Simply append to enqueue.
-	//queue.PushBack(r)
 	queue.PushBack(&e)
-	//fmt.Fprint(w, "Your request is added to the queue, please wait")
 	fmt.Println("Your request is added to the queue, please wait")
 
 	for {
