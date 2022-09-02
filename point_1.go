@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"net/http"
 	"net/url"
 	"sort"
 	"strconv"
+	"time"
 )
 
 type vacancies []struct {
@@ -42,16 +44,28 @@ func Call1(e *Element) {
 	lvArea := url.QueryEscape(e.rd.Area)
 	//Build The URL string
 	URL := "https://go_web_hh_vac.cfapps.us10.hana.ondemand.com/hh4?text=" + lvText + "&" + "area=" + lvArea
-	//We make HTTP request using the Get function
-	resp, err := http.Get(URL)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 600*time.Second)
+	defer cancel()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, URL, nil)
 	if err != nil {
-		log.Fatal("Sorry, an error occurred, please try again")
+		log.Fatal("Sorry, an error1 occurred, please try again: ", err)
+	}
+	// Отправляем запрос
+	resp, err := http.DefaultClient.Do(req)
+	//We make HTTP request using the Get function
+	//resp, err := http.Get(URL)
+	if err != nil {
+		//log.Fatal("Sorry, an error2 occurred, please try again: ", err)
+		//fmt.Println("Sorry, an error2 occurred, please try again: ", err)
+		log.Println("Sorry, an error2 occurred, please try again: ", err)
+		return
 	}
 	defer resp.Body.Close()
 
 	//Decode the data
 	if err := json.NewDecoder(resp.Body).Decode(&ltVacancies); err != nil {
-		log.Fatal("Sorry, an error occurred, please try again")
+		log.Fatal("Sorry, an error3 occurred, please try again")
 	}
 
 	for _, line := range ltVacancies {
