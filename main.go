@@ -9,36 +9,15 @@ import (
 	"time"
 )
 
-/*type vacancies []struct {
-	URL          string `json:"strUrl"`
-	Name         string `json:"strJobTitle"`
-	AreaName     string `json:"strArea"`
-	EmployerName string `json:"strCompany"`
-	Description  string `json:"strBodyFull"`
-	KeySkills    []struct {
-		Name string `json:"name"`
-	} `json:"strArrKeySkills"`
-}*/
-
 type RespData struct {
-	Title    string
-	Response string
-	List     PairList
-	Text     string
-	Area     string
-	ItemsNum string
+	Title      string
+	Response   string
+	List       PairList
+	Text       string
+	Area       string
+	ItemsNum   string
+	Point1List AnSkillsList
 }
-
-/*func rankByWordCount(wordFrequencies map[string]int) PairList {
-	pl := make(PairList, len(wordFrequencies))
-	i := 0
-	for k, v := range wordFrequencies {
-		pl[i] = Pair{k, v}
-		i++
-	}
-	sort.Sort(sort.Reverse(pl))
-	return pl
-}*/
 
 /*
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -133,6 +112,9 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 		rd: &rd,
 	}
 
+	e.rd.Title = "Skills analyzer"
+	e.rd.Response = "Welcome to the skills analyzer"
+
 	// Simply append to enqueue.
 	queue.PushBack(&e)
 	fmt.Println("Your request is added to the queue, please wait")
@@ -140,7 +122,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	for {
 		select {
 		case <-e.c:
-			fmt.Fprint(*e.w, "You request is ", e.rd.Text, e.rd.List)
+			fmt.Fprint(*e.w, "You request is ", e.rd.Text, e.rd.Point1List)
 			//////// here should be the rendering data or
 			return
 		}
@@ -196,17 +178,13 @@ func elementHandler(e *Element) {
 		return
 	}
 
-	/*pE := point1.Element{}
-	pE.RD.Area = *&e.rd.Area
-	pE.RD.Text = *&e.rd.Text
-
-	point1.Call1(pE)*/
 	Call1(e)
 
 	e.c <- 1 //Done
 }
 
 func main() {
+
 	// new linked list for the queue
 	queue = list.New()
 	fmt.Println("new linked list for the queue")
