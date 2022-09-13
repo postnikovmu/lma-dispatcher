@@ -10,13 +10,14 @@ import (
 )
 
 type RespData struct {
-	Title      string
-	Response   string
-	List       PairList
-	Text       string
-	Area       string
-	ItemsNum   string
+	Title    string
+	Response string
+	//parameters of the request
+	Text string
+	Area string
+	//data from the point1
 	Point1List AnSkillsList
+	Point1Err  error
 }
 
 type Element struct {
@@ -62,15 +63,17 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 }
 
 func queueHandler() {
+
 	for {
+
 		fmt.Println("Hello from endless loop")
 		if queue.Len() != 0 {
+
 			// Dequeue
 			front := queue.Front()
 			// This will remove the allocated memory and avoid memory leaks
 			queue.Remove(front)
 
-			//var respFromQueue *http.Request
 			var e *Element
 
 			switch v := front.Value.(type) {
@@ -83,7 +86,7 @@ func queueHandler() {
 			go elementHandler(e)
 
 		}
-		time.Sleep(10 * time.Second)
+		time.Sleep(15 * time.Second)
 	}
 }
 
@@ -118,7 +121,7 @@ func main() {
 
 	// new linked list for the queue
 	queue = list.New()
-	fmt.Println("new linked list for the queue")
+	fmt.Println("new linked list for the queue is created")
 
 	go queueHandler()
 
