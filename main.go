@@ -2,6 +2,7 @@ package main
 
 import (
 	"container/list"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -57,8 +58,10 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	//blocking until Done
 	<-e.c
 
-	fmt.Fprint(*e.w, "You request is ", e.rd.Text, e.rd.Point1List, e.rd.Point1Err, e.rd.Point2Err)
-
+	//fmt.Fprint(*e.w, "You request is ", e.rd.Text, e.rd.Point1List, e.rd.Point1Err, e.rd.Point2Err)
+	j, _ := json.Marshal(*e.rd)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(j)
 }
 
 func queueHandler() {
