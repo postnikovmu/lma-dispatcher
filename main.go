@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"sync"
 	"time"
 )
 
@@ -15,9 +16,11 @@ type RespData struct {
 	//parameters of the request
 	Text string
 	Area string
-	//data from the point1
+
 	Point1List AnSkillsList
 	Point1Err  error
+
+	Point2Err error
 }
 
 type Element struct {
@@ -51,14 +54,10 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	queue.PushBack(&e)
 	fmt.Println("Your request is added to the queue, please wait")
 
-	for {
-		select {
-		case <-e.c:
-			fmt.Fprint(*e.w, "You request is ", e.rd.Text, e.rd.Point1List)
-			//////// here should be the rendering data or
-			return
-		}
-	}
+	//blocking until Done
+	<-e.c
+
+	fmt.Fprint(*e.w, "You request is ", e.rd.Text, e.rd.Point1List, e.rd.Point1Err, e.rd.Point2Err)
 
 }
 
@@ -112,7 +111,13 @@ func elementHandler(e *Element) {
 		return
 	}
 
-	Call1(e)
+	var wg sync.WaitGroup
+	wg.Add(2) // there are two goroutines in the group
+
+	Call1(&wg, e)
+	Call2(&wg, e)
+
+	wg.Wait()
 
 	e.c <- 1 //Done
 }

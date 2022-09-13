@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"sync"
 	"time"
 )
 
@@ -31,9 +32,10 @@ type AnSkillsList []struct {
 	} `json:"sSummary"`
 }
 
-func Call1(e *Element) {
+func Call1(wg *sync.WaitGroup, e *Element) {
 
 	/*Part0 preparations*/
+	defer wg.Done()
 	ctx, cancel := context.WithTimeout(context.Background(), 600*time.Second)
 	defer cancel()
 
