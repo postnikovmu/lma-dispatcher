@@ -135,7 +135,7 @@ func main() {
 
 	http.HandleFunc("/", handler1)
 
-	http.ListenAndServe("localhost:8080", nil) //locally
-	//http.ListenAndServe(":8080", nil) //SAP BTP CloudFounry
+	//http.ListenAndServe("localhost:8080", nil) //locally
+	http.ListenAndServe(":8080", nil) //SAP BTP CloudFounry
 
 }
