@@ -26,9 +26,10 @@ type RespData struct {
 }
 
 type Point struct {
-	List AnSkillsList
-	err  error
-	Err  string
+	Service string       `json:"strService"`
+	Data    AnSkillsList `json:"arrData"`
+	err     error
+	Err     string `json:"strErr"`
 }
 
 type Element struct {

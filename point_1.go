@@ -103,8 +103,10 @@ func Call1(wg *sync.WaitGroup, e *Element) {
 		return
 	}
 
-	e.rd.Point1.List = ltAnSkillsList
+	e.rd.Point1.Service = "hh.ru"
+	e.rd.Point1.Data = ltAnSkillsList
 	if e.rd.Point1.err != nil {
 		e.rd.Point1.Err = e.rd.Point1.err.Error()
 	}
+
 }
