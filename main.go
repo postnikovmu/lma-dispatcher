@@ -18,10 +18,16 @@ type RespData struct {
 	Text string
 	Area string
 
-	Point1List AnSkillsList
-	Point1Err  error
+	//Data from hh.ru
+	Point1 Point
 
-	Point2Err error
+	//Data from atos.net
+	Point2 Point
+}
+
+type Point struct {
+	List AnSkillsList
+	Err  error
 }
 
 type Element struct {
@@ -58,7 +64,6 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	//blocking until Done
 	<-e.c
 
-	//fmt.Fprint(*e.w, "You request is ", e.rd.Text, e.rd.Point1List, e.rd.Point1Err, e.rd.Point2Err)
 	j, _ := json.Marshal(*e.rd)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(j)
