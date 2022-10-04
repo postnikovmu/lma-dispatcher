@@ -27,7 +27,8 @@ type RespData struct {
 
 type Point struct {
 	List AnSkillsList
-	Err  error
+	err  error
+	Err  string
 }
 
 type Element struct {

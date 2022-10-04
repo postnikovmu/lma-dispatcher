@@ -52,14 +52,14 @@ func Call1(wg *sync.WaitGroup, e *Element) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, URL, nil)
 	if err != nil {
 		log.Println("Sorry, an error1 occurred, please try again: ", err)
-		e.rd.Point1.Err = err
+		e.rd.Point1.err = err
 		return
 	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println("Sorry, an error2 occurred, please try again: ", err)
-		e.rd.Point1.Err = err
+		e.rd.Point1.err = err
 		return
 	}
 	defer resp.Body.Close()
@@ -67,7 +67,7 @@ func Call1(wg *sync.WaitGroup, e *Element) {
 	//Decode the data
 	if err := json.NewDecoder(resp.Body).Decode(&ltVacancies); err != nil {
 		log.Println("Sorry, an error3 occurred, please try again: ", err)
-		e.rd.Point1.Err = err
+		e.rd.Point1.err = err
 		return
 	}
 
@@ -82,7 +82,7 @@ func Call1(wg *sync.WaitGroup, e *Element) {
 	req1, err := http.NewRequestWithContext(ctx, http.MethodPost, "https://lma_analyzer_py_ak_01.cfapps.us10.hana.ondemand.com/", bytes.NewBuffer(jsonValue))
 	if err != nil {
 		log.Println("Sorry, an error4 occurred, please try again: ", err)
-		e.rd.Point1.Err = err
+		e.rd.Point1.err = err
 		return
 	}
 
@@ -92,16 +92,19 @@ func Call1(wg *sync.WaitGroup, e *Element) {
 	resp1, err := http.DefaultClient.Do(req1)
 	if err != nil {
 		log.Println("Sorry, an error5 occurred, please try again: ", err)
-		e.rd.Point1.Err = err
+		e.rd.Point1.err = err
 		return
 	}
 	defer resp1.Body.Close()
 
 	if err := json.NewDecoder(resp1.Body).Decode(&ltAnSkillsList); err != nil {
 		log.Println("Sorry, an error6 occurred, please try again: ", err)
-		e.rd.Point1.Err = err
+		e.rd.Point1.err = err
 		return
 	}
 
 	e.rd.Point1.List = ltAnSkillsList
+	if e.rd.Point1.err != nil {
+		e.rd.Point1.Err = e.rd.Point1.err.Error()
+	}
 }
