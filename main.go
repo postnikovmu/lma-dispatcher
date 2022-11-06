@@ -75,7 +75,6 @@ func queueHandler() {
 
 	for {
 
-		fmt.Println("Hello from endless loop")
 		if queue.Len() != 0 {
 
 			// Dequeue
