@@ -1,4 +1,4 @@
-# go-vac-back-serv
+# lma-dispatcher
 Go backend microservice, queue of the tasks.
 
 ## General Info

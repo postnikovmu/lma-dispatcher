@@ -49,7 +49,7 @@ func Call1(wg *sync.WaitGroup, e *Element) {
 	//Build The URL string
 	lvText := url.QueryEscape(e.rd.Text)
 	lvArea := url.QueryEscape(e.rd.Area)
-	URL := "https://go_web_hh_vac.cfapps.us10.hana.ondemand.com/hh4?text=" + lvText + "&" + "area=" + lvArea
+	URL := "https://lma-extractor-hh.cfapps.us10.hana.ondemand.com/hh4?text=" + lvText + "&" + "area=" + lvArea
 	e.rd.Point1.Service = "hh.ru"
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, URL, nil)

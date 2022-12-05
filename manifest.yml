@@ -1,5 +1,7 @@
 ---
 applications:
-- name: go_vac_back_serv
+- name: lma-dispatcher
   env:
-    GOVERSION: go1.17   
+    GOVERSION: go1.17
+  memory: 256M
+  disk_quota: 256MB
