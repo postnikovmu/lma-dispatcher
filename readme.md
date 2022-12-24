@@ -26,7 +26,7 @@ microservices: \
 ./lma-extractor-hh \
 (...lma-analyzer is not on github yet...)
 ### Deploy:
-Deploy is on SAP BTP CloudFoundry platform: the settings are in manifest.yml. (or another CloudFoundry)
+Deploy is to SAP BTP platform CloudFoundry: the settings are in manifest.yml. (or another CloudFoundry)
 
 ## Technologies
 
